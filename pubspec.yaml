@@ -37,7 +37,7 @@ dependencies:
   http: ^0.13.4
   niku: ^2.3.2
   better_player: ^0.0.83
-  # anilist: ^2.0.0-NullSafety.2
+  # toast: ^0.2.9
 
 dev_dependencies:
   flutter_test:

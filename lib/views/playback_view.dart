@@ -1,25 +1,55 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:miru/gogoanime/http_service.dart';
 import '../gogoanime/types.dart';
 import 'package:better_player/better_player.dart';
 
-class PlaybackView extends StatelessWidget {
-  final AnimeDetails animeDetail;
+class PlaybackView extends StatefulWidget {
+  final AnimeDetails? animeDetail;
   final String? episodeId;
-  const PlaybackView({Key? key, required this.animeDetail, this.episodeId})
+  final StreamLinks? streamLinks;
+  const PlaybackView({Key? key, this.animeDetail, this.episodeId, this.streamLinks})
       : super(key: key);
-  Future<String> getStreamUrl() async {
+
+  @override
+  State<StatefulWidget> createState() =>
+      // ignore: no_logic_in_create_state, unnecessary_this
+      _PlaybackViewState(this.animeDetail, this.episodeId, this.streamLinks);
+}
+
+class _PlaybackViewState extends State<StatefulWidget> {
+  AnimeDetails? animeDetail;
+  String? episodeId;
+  StreamLinks? streamLinks;
+  _PlaybackViewState(this.animeDetail, this.episodeId, this.streamLinks);
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  StreamLinks? setStreamUrl() {
+    StreamLinks? lnks;
     var gogo = GogoAnime();
-    String url = '';
     if (episodeId == null) {
-      var k =
-          await gogo.fetchStreamLinks(animeDetail.episodesList[0].episodeId);
-      url = k!.sources.first.file;
-    } else {
-      var k = await gogo.fetchStreamLinks(episodeId!);
-      url = k!.sources.first.file;
+      gogo
+          .fetchStreamLinks(animeDetail!.episodesList.last.episodeId)
+          .then((value) {
+        lnks = value!;
+        if (kDebugMode) {
+          print(value.toJson().toString());
+        }
+      });
+    } else if (lnks == null) {
+      gogo.fetchStreamLinks(episodeId!).then((value) {
+        lnks = value!;
+        if (kDebugMode) {
+          print(value.toJson().toString());
+        }
+      });
     }
-    return url;
+    return lnks;
   }
 
   @override
@@ -27,7 +57,7 @@ class PlaybackView extends StatelessWidget {
     var videoPart = AspectRatio(
       aspectRatio: 16 / 9,
       child: BetterPlayer.network(
-        getStreamUrl().toString(),
+        streamLinks!.sourcesBk.first.file,
         betterPlayerConfiguration: const BetterPlayerConfiguration(
           aspectRatio: 16 / 9,
         ),

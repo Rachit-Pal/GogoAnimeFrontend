@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:miru/gogoanime/http_service.dart';
 import 'package:miru/gogoanime/types.dart';
 import 'package:miru/views/playback_view.dart';
 
 class AnimeInfoView extends StatelessWidget {
   final AnimeDetails? animeDetail;
+
   const AnimeInfoView({Key? key, required this.animeDetail}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     AnimeDetails data;
+    StreamLinks? streamLinks;
+    var gogo = GogoAnime();
     if (animeDetail == null) {
       return const Text("Data not available");
     } else {
       data = animeDetail!;
+      gogo.fetchStreamLinks(animeDetail!.episodesList.last.episodeId).then((value) {
+        streamLinks = value;
+      });
     }
     Widget titleSection = Container(
       padding: const EdgeInsets.all(32),
@@ -55,7 +62,12 @@ class AnimeInfoView extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => PlaybackView(animeDetail: data)));
+                      builder: (context) => PlaybackView(animeDetail: data, streamLinks: streamLinks)));
+              /*Toast.show(
+                  "Loading",
+                  duration: Toast.lengthShort,
+                  gravity: Toast.bottom);
+               */
             },
             child: _buildButtonColumn(color, Icons.stream, 'WATCH')),
         // _buildButtonColumn(color, Icons.near_me, 'ROUTE'),

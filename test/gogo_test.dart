@@ -26,7 +26,7 @@ void main() {
   });
 
   test("gogoanime vidstream", () async {
-    final results = await gogo.fetchStreamLinks("naruto-episode-220");
+    final results = await gogo.fetchStreamLinks("summertime-render-episode-11");
     if (kDebugMode) {
       print(results?.toJson());
     }
