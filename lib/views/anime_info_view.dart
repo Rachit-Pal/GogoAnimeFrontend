@@ -11,15 +11,11 @@ class AnimeInfoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AnimeDetails data;
-    StreamLinks? streamLinks;
     var gogo = GogoAnime();
     if (animeDetail == null) {
       return const Text("Data not available");
     } else {
       data = animeDetail!;
-      gogo.fetchStreamLinks(animeDetail!.episodesList.last.episodeId).then((value) {
-        streamLinks = value;
-      });
     }
     Widget titleSection = Container(
       padding: const EdgeInsets.all(32),
@@ -59,10 +55,15 @@ class AnimeInfoView extends StatelessWidget {
       children: [
         GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PlaybackView(animeDetail: data, streamLinks: streamLinks)));
+              gogo
+                  .fetchStreamLinks(animeDetail!.episodesList.first.episodeId)
+                  .then((value) => {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlaybackView(
+                                    animeDetail: data, streamLinks: value)))
+                      });
               /*Toast.show(
                   "Loading",
                   duration: Toast.lengthShort,
