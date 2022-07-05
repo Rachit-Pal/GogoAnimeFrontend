@@ -133,9 +133,9 @@ class _PlaybackViewState extends State<StatefulWidget> {
       //textSection,
     ])
       ..addAll(listTiles);
-    if (episodeNumber == null) {
-      episodeNumber = '1';
-    }
+
+    episodeNumber ??= '1';
+
     return Scaffold(
       appBar: AppBar(title: Text("Watch Episode $episodeNumber")),
       body: ListView(children: widGetList),
