@@ -8,7 +8,9 @@ class PlaybackView extends StatefulWidget {
   final AnimeDetails? animeDetail;
   final String? episodeId;
   final StreamLinks? streamLinks;
-  const PlaybackView({Key? key, this.animeDetail, this.episodeId, this.streamLinks})
+
+  const PlaybackView(
+      {Key? key, this.animeDetail, this.episodeId, this.streamLinks})
       : super(key: key);
 
   @override
@@ -21,8 +23,8 @@ class _PlaybackViewState extends State<StatefulWidget> {
   AnimeDetails? animeDetail;
   String? episodeId;
   StreamLinks? streamLinks;
-  _PlaybackViewState(this.animeDetail, this.episodeId, this.streamLinks);
 
+  _PlaybackViewState(this.animeDetail, this.episodeId, this.streamLinks);
 
   @override
   void initState() {
@@ -54,26 +56,76 @@ class _PlaybackViewState extends State<StatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
+    var gogo = GogoAnime();
     var videoPart = AspectRatio(
       aspectRatio: 16 / 9,
       child: BetterPlayer.network(
-        streamLinks!.sourcesBk.first.file,
+        streamLinks!.sources.first.file,
         betterPlayerConfiguration: const BetterPlayerConfiguration(
           aspectRatio: 16 / 9,
         ),
       ),
     );
 
-    return Scaffold(
-      appBar: AppBar(title: const Text("Watch")),
-      body: ListView(
+    var listTiles = <Widget>[];
+    for (var element in animeDetail!.episodesList) {
+      listTiles.add(ListTile(
+        leading: const Icon(Icons.movie),
+        title: Text('Episode ${element.episodeNum}'),
+        onTap: () {
+          gogo.fetchStreamLinks(element.episodeId).then((value) => {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PlaybackView(
+                            animeDetail: animeDetail, streamLinks: value)))
+              });
+        },
+      ));
+    }
+
+    Widget textSection = Container(
+      padding: const EdgeInsets.all(32),
+      child: Row(
         children: [
-          videoPart
-          //titleSection,
-          //buttonSection,
-          //textSection,
+          Expanded(
+            /*1*/
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /*2*/
+                Container(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    animeDetail!.animeTitle,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Text(
+                  animeDetail!.genres.join(", "),
+                  style: TextStyle(
+                    color: Colors.grey[500],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
+    );
+
+    List<Widget> widGetList = List.from([
+      videoPart,
+      textSection,
+      // bottomSection
+      //textSection,
+    ])
+      ..addAll(listTiles);
+    return Scaffold(
+      appBar: AppBar(title: const Text("Watch")),
+      body: ListView(children: widGetList),
     );
   }
 }
