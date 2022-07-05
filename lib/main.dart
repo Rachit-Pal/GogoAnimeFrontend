@@ -12,7 +12,7 @@ class Miru extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Niku',
+      title: 'Miru',
       theme: ThemeData.dark(),
       home: const MiruHome(title: 'Miru'),
     );

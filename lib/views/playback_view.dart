@@ -8,23 +8,31 @@ class PlaybackView extends StatefulWidget {
   final AnimeDetails? animeDetail;
   final String? episodeId;
   final StreamLinks? streamLinks;
+  final String? episodeNumber;
 
   const PlaybackView(
-      {Key? key, this.animeDetail, this.episodeId, this.streamLinks})
+      {Key? key,
+      this.animeDetail,
+      this.episodeId,
+      this.streamLinks,
+      this.episodeNumber})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() =>
       // ignore: no_logic_in_create_state, unnecessary_this
-      _PlaybackViewState(this.animeDetail, this.episodeId, this.streamLinks);
+      _PlaybackViewState(this.animeDetail, this.episodeId, this.streamLinks,
+          this.episodeNumber);
 }
 
 class _PlaybackViewState extends State<StatefulWidget> {
   AnimeDetails? animeDetail;
   String? episodeId;
+  String? episodeNumber = '1';
   StreamLinks? streamLinks;
 
-  _PlaybackViewState(this.animeDetail, this.episodeId, this.streamLinks);
+  _PlaybackViewState(
+      this.animeDetail, this.episodeId, this.streamLinks, this.episodeNumber);
 
   @override
   void initState() {
@@ -78,7 +86,9 @@ class _PlaybackViewState extends State<StatefulWidget> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => PlaybackView(
-                            animeDetail: animeDetail, streamLinks: value)))
+                            animeDetail: animeDetail,
+                            streamLinks: value,
+                            episodeNumber: element.episodeNum)))
               });
         },
       ));
@@ -123,8 +133,11 @@ class _PlaybackViewState extends State<StatefulWidget> {
       //textSection,
     ])
       ..addAll(listTiles);
+    if (episodeNumber == null) {
+      episodeNumber = '1';
+    }
     return Scaffold(
-      appBar: AppBar(title: const Text("Watch")),
+      appBar: AppBar(title: Text("Watch Episode $episodeNumber")),
       body: ListView(children: widGetList),
     );
   }
