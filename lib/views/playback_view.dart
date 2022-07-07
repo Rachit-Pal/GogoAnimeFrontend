@@ -31,11 +31,26 @@ class _PlaybackViewState extends State<StatefulWidget> {
   String? episodeNumber = '1';
   StreamLinks? streamLinks;
 
+  BetterPlayerController? betterPlayerController;
+
   _PlaybackViewState(
       this.animeDetail, this.episodeId, this.streamLinks, this.episodeNumber);
 
   @override
   void initState() {
+    betterPlayerController = BetterPlayerController(
+      const BetterPlayerConfiguration(aspectRatio: 16 / 9),
+      betterPlayerDataSource:
+          BetterPlayerDataSource.network(streamLinks!.sources.first.file),
+    );
+
+    betterPlayerController?.addEventsListener((BetterPlayerEvent event) {
+      if (event.betterPlayerEventType == BetterPlayerEventType.initialized) {
+        betterPlayerController?.setOverriddenAspectRatio(
+            betterPlayerController!.videoPlayerController!.value.aspectRatio);
+        setState(() {});
+      }
+    });
     super.initState();
   }
 
@@ -67,12 +82,7 @@ class _PlaybackViewState extends State<StatefulWidget> {
     var gogo = GogoAnime();
     var videoPart = AspectRatio(
       aspectRatio: 16 / 9,
-      child: BetterPlayer.network(
-        streamLinks!.sources.first.file,
-        betterPlayerConfiguration: const BetterPlayerConfiguration(
-          aspectRatio: 16 / 9,
-        ),
-      ),
+      child: BetterPlayer(controller: betterPlayerController!),
     );
 
     var listTiles = <Widget>[];

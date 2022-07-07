@@ -1,14 +1,16 @@
 import 'dart:convert';
 import 'package:miru/gogoanime/types.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart' as http;
 
 class GogoAnime {
   final String host = 'gogoanime.herokuapp.com';
   final String scheme = 'https';
+
   Future<List<Results>> fetchPopular() async {
     final response =
-        await http.get(Uri(scheme: scheme, host: host, path: 'popular'));
+    await http.get(Uri(scheme: scheme, host: host, path: 'popular'));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       final results = (data as List).map((i) => Results.fromJson(i));
@@ -38,5 +40,19 @@ class GogoAnime {
       return results;
     }
     return null;
+  }
+
+  Future<List<Results>> searchAnime(String query) async {
+    final response =
+    await http.get(Uri(scheme: scheme,
+        host: host,
+        path: 'search', queryParameters: {'keyw': query}));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      final results = (data as List).map((i) => Results.fromJson(i));
+      return results.toList();
+    } else {
+      return [];
+    }
   }
 }

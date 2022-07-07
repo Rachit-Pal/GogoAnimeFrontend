@@ -14,18 +14,18 @@ String resultsToJson(List<Results> data) =>
 
 class Results {
   Results({
-    required this.animeId,
-    required this.animeTitle,
-    required this.animeImg,
-    required this.releasedDate,
-    required this.animeUrl,
+    this.animeId,
+    this.animeTitle,
+    this.animeImg,
+    this.releasedDate,
+    this.animeUrl,
   });
 
-  String animeId;
-  String animeTitle;
-  String animeImg;
-  String releasedDate;
-  String animeUrl;
+  String? animeId;
+  String? animeTitle;
+  String? animeImg;
+  String? releasedDate;
+  String? animeUrl;
 
   factory Results.fromJson(Map<String, dynamic> json) => Results(
         animeId: json["animeId"],
@@ -57,6 +57,7 @@ class AnimeDetails {
     required this.totalEpisodes,
     required this.episodesList,
   });
+
   late final String animeTitle;
   late final String type;
   late final String releasedDate;
@@ -105,6 +106,7 @@ class EpisodesList {
     required this.episodeNum,
     required this.episodeUrl,
   });
+
   late final String episodeId;
   late final String episodeNum;
   late final String episodeUrl;
@@ -131,22 +133,26 @@ class StreamLinks {
     required this.sources,
     required this.sourcesBk,
   });
+
   // ignore: non_constant_identifier_names
   late final String Referer;
   late final List<Sources> sources;
   late final List<SourcesBk> sourcesBk;
-  
-  StreamLinks.fromJson(Map<String, dynamic> json){
+
+  StreamLinks.fromJson(Map<String, dynamic> json) {
     Referer = json['Referer'];
-    sources = List.from(json['sources']).map((e)=>Sources.fromJson(e)).toList();
-    sourcesBk = List.from(json['sources_bk']).map((e)=>SourcesBk.fromJson(e)).toList();
+    sources =
+        List.from(json['sources']).map((e) => Sources.fromJson(e)).toList();
+    sourcesBk = List.from(json['sources_bk'])
+        .map((e) => SourcesBk.fromJson(e))
+        .toList();
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['Referer'] = Referer;
-    _data['sources'] = sources.map((e)=>e.toJson()).toList();
-    _data['sources_bk'] = sourcesBk.map((e)=>e.toJson()).toList();
+    _data['sources'] = sources.map((e) => e.toJson()).toList();
+    _data['sources_bk'] = sourcesBk.map((e) => e.toJson()).toList();
     return _data;
   }
 }
@@ -157,11 +163,12 @@ class Sources {
     required this.label,
     required this.type,
   });
+
   late final String file;
   late final String label;
   late final String type;
-  
-  Sources.fromJson(Map<String, dynamic> json){
+
+  Sources.fromJson(Map<String, dynamic> json) {
     file = json['file'];
     label = json['label'];
     type = json['type'];
@@ -182,11 +189,12 @@ class SourcesBk {
     required this.label,
     required this.type,
   });
+
   late final String file;
   late final String label;
   late final String type;
-  
-  SourcesBk.fromJson(Map<String, dynamic> json){
+
+  SourcesBk.fromJson(Map<String, dynamic> json) {
     file = json['file'];
     label = json['label'];
     type = json['type'];

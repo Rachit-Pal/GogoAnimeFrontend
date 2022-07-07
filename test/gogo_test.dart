@@ -32,4 +32,15 @@ void main() {
     }
     expect(results?.sources.length, greaterThan(0));
   });
+
+  test("gogoanime search", () async {
+    popular = await gogo.searchAnime("naruto");
+    popular.every((element) {
+      if (kDebugMode) {
+        print(element.toJson());
+      }
+      return true;
+    });
+    expect(popular.length, greaterThan(0));
+  });
 }
