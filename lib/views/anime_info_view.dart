@@ -50,27 +50,35 @@ class AnimeInfoView extends StatelessWidget {
     );
 
     Color color = Colors.white;
+    var streamBtn = _buildButtonColumn(color, Icons.not_interested, 'WATCH');
+    if (animeDetail!.episodesList.isNotEmpty) {
+      streamBtn = _buildButtonColumn(color, Icons.stream, 'WATCH');
+    }
     Widget buttonSection = Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         GestureDetector(
             onTap: () {
-              gogo
-                  .fetchStreamLinks(animeDetail!.episodesList.first.episodeId)
-                  .then((value) => {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PlaybackView(
-                                    animeDetail: data, streamLinks: value)))
-                      });
+              if (animeDetail!.episodesList.isNotEmpty) {
+                gogo
+                    .fetchStreamLinks(animeDetail!.episodesList.first.episodeId)
+                    .then((value) =>
+                {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              PlaybackView(
+                                  animeDetail: data, streamLinks: value)))
+                });
+              }
               /*Toast.show(
                   "Loading",
                   duration: Toast.lengthShort,
                   gravity: Toast.bottom);
                */
             },
-            child: _buildButtonColumn(color, Icons.stream, 'WATCH')),
+            child: streamBtn),
         // _buildButtonColumn(color, Icons.near_me, 'ROUTE'),
         _buildButtonColumn(color, Icons.share, 'SHARE'),
       ],
