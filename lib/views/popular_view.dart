@@ -25,18 +25,21 @@ class _PopularViewState extends State<PopularView> {
   @override
   Widget build(BuildContext context) {
     fetchPopular();
-    return ListView.separated(
-      padding: const EdgeInsets.all(8),
-      itemCount: _results.length,
-      itemBuilder: (BuildContext context, int index) {
-        return getDisplayCard(_results[index], gogo, context);
-        /*return Container(
+    return Scaffold(
+      appBar: AppBar(title: const Text("Miru")),
+      body: ListView.separated(
+        padding: const EdgeInsets.all(8),
+        itemCount: _results.length,
+        itemBuilder: (BuildContext context, int index) {
+          return getDisplayCard(_results[index], gogo, context);
+          /*return Container(
           height: 50,
           color: Colors.amber[colorCodes[index]],
           child: Center(child: Text('Entry ${entries[index]}')),
         );*/
-      },
-      separatorBuilder: (BuildContext context, int index) => const Divider(),
+        },
+        separatorBuilder: (BuildContext context, int index) => const Divider(),
+      ),
     );
   }
 }
